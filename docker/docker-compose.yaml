@@ -1,0 +1,4 @@
+# This is the docker-compose configuration that launches the full
+# braingeneers stack. Use the Makefile to run it. Example:
+#   make start-services
+#   make stop-services

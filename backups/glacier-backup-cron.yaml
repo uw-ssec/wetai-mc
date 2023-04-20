@@ -1,0 +1,58 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: braingeneers-glacier-backup
+spec:
+  schedule: "0 6,18 * * *"
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 5
+  parallelism: 5
+  completions: 5
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: davidparks21-container
+            image: localhost:30081/braingeneers/braingeneers:latest
+            imagePullPolicy: Always
+            resources:
+              requests:
+                cpu: "1"
+                memory: "0.7Gi"
+              limits:
+                cpu: "2"
+                memory: "1.4Gi"
+            command: ["stdbuf", "-i0", "-o0", "-e0", "/usr/bin/time", "-v", "bash", "-c"]
+            args:
+              - >-
+                echo todo
+            volumeMounts:
+              - name: prp-s3-credentials
+                mountPath: "/root/.aws/credentials"
+                subPath: "credentials"
+              - name: prp-s3-credentials
+                mountPath: "/root/.s3cfg"
+                subPath: "s3cfg"
+              - name: prp-s3-credentials
+                mountPath: "/root/.config/rclone/rclone.conf"
+                subPath: "rclone.conf"
+
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: NotIn
+                    values:
+                    - cni.projectcalico.org
+                    - sdsmt-fiona.sdsmt.edu
+                    - fiona.its.hawaii.edu
+
+          restartPolicy: Never
+          volumes:
+            # Secrets file for nautilus s3 credentials .aws/credentials and .s3cfg
+            - name: prp-s3-credentials
+              secret:
+                secretName: prp-s3-credentials
