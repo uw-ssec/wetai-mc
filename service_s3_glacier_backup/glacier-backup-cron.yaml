@@ -12,9 +12,11 @@ spec:
     spec:
       template:
         spec:
-          containers:
-          - name: davidparks21-container
-            image: localhost:30081/braingeneers/braingeneers:latest
+
+          # Init container seed the queue
+          initContainers:
+            - name: backup-init
+              image: localhost:30081/braingeneers/glaciers3-glacier-backup:latest
             imagePullPolicy: Always
             resources:
               requests:
@@ -26,7 +28,25 @@ spec:
             command: ["stdbuf", "-i0", "-o0", "-e0", "/usr/bin/time", "-v", "bash", "-c"]
             args:
               - >-
-                echo todo
+                python s3_glacier_backup.py --init
+
+          # Worker containers will take tasks from the queue until END token
+          containers:
+          - name: backup
+            image: localhost:30081/braingeneers/glaciers3-glacier-backup:latest
+            imagePullPolicy: Always
+            resources:
+              requests:
+                cpu: "1"
+                memory: "0.7Gi"
+              limits:
+                cpu: "2"
+                memory: "1.4Gi"
+            command: ["stdbuf", "-i0", "-o0", "-e0", "/usr/bin/time", "-v", "bash", "-c"]
+            args:
+              - >-
+                python s3_glacier_backup.py
+
             volumeMounts:
               - name: prp-s3-credentials
                 mountPath: "/root/.aws/credentials"
@@ -38,6 +58,7 @@ spec:
                 mountPath: "/root/.config/rclone/rclone.conf"
                 subPath: "rclone.conf"
 
+          # Option to exclude mis-behaving hosts
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -46,9 +67,7 @@ spec:
                   - key: kubernetes.io/hostname
                     operator: NotIn
                     values:
-                    - cni.projectcalico.org
-                    - sdsmt-fiona.sdsmt.edu
-                    - fiona.its.hawaii.edu
+                    - none
 
           restartPolicy: Never
           volumes:
