@@ -1,0 +1,100 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dp-mqtt-h5repack-workers-x
+spec:
+  parallelism: 3
+  completions: 3
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never  # Never | OnFailure
+
+      containers:
+      - name: h5repack
+        image: localhost:30081/braingeneers/job_h5repack:latest
+        imagePullPolicy: Always
+
+        command: ["stdbuf", "-i0", "-o0", "-e0", "/usr/bin/time", "-v", "bash", "-c"]
+        args:
+          - >-
+            python h5repack_task.sh
+
+        resources:
+          requests:
+            cpu: "1"
+            memory: "500Mi"
+          limits:
+            cpu: "2"
+            memory: "1500Mi"
+
+        env:
+          - name: "AWS_PROFILE"
+            value: "default"
+          - name: "TF_CPP_MIN_LOG_LEVEL"
+            value: "3"
+          - name: "VERSION"
+            value: "${VERSION}"
+          - name: "SAMPLE_WIDTH"
+            value: "${SAMPLE_WIDTH}"
+          - name: "INCLUDE_CHANNELS"
+            value: "${INCLUDE_CHANNELS}"
+          - name: "DATASET_NAME"
+            value: "${DATASET_NAME}"
+          - name: "DATASET_NAME_LOWERCASE"
+            value: "${DATASET_NAME_LOWERCASE}"
+          - name: "USER"
+            value: "${USER}"
+          - name: "CONTAINER"
+            value: "${CONTAINER}"
+          - name: "PYTHONUNBUFFERED"
+            value: "true"
+
+          # Endpoint
+          - name: "ENDPOINT"
+            value: "${JOB_ENDPOINT}"
+          - name: "S3_ENDPOINT"
+            value: "${JOB_S3_ENDPOINT}"
+          - name: "S3_USE_HTTPS"
+            value: "${JOB_S3_USE_HTTPS}"
+
+        volumeMounts:
+
+          # Ceph & SWFS credentials
+          - name: "prp-s3-credentials"
+            mountPath: "/root/.aws/credentials"
+            subPath: "credentials"
+          - name: "prp-s3-credentials"
+            mountPath: "/root/.s3cfg"
+            subPath: ".s3cfg"
+
+          # kube config
+          - name: "kube-config"
+            mountPath: "/root/.kube"
+          # SystemV shared memory
+          - name: "dshm"
+            mountPath: "/dev/shm"
+
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              # Host blacklist
+              - key: kubernetes.io/hostname
+                operator: NotIn
+                values:
+                  - none
+
+      volumes:
+        # Secrets file for nautilus s3 credentials .aws/credentials and .s3cfg
+        - name: prp-s3-credentials
+          secret:
+            secretName: prp-s3-credentials
+        - name: kube-config
+          secret:
+            secretName: kube-config
+        # Shared memory (necessary for Python's multiprocessing.shared_memory module to work)
+        - name: dshm
+          emptyDir:
+            medium: Memory

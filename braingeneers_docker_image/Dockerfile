@@ -11,9 +11,12 @@ RUN sudo apt-get update && sudo apt-get install -y \
     ffmpeg \
     rclone \
     awscli \
-    hdf5-tools
+    hdf5-tools \
+    time
 
 # The ADD command below downloads the latest commit information. If it has changed since the last build
 # the following layers will not be cached, if it hasn't changed the following layers will rebuild.
 ADD "https://api.github.com/repos/braingeneers/braingeneerspy/commits?per_page=1" /tmp/latest_braingeneers_commit
 RUN python -m pip install --force-reinstall --no-cache git+https://github.com/braingeneers/braingeneerspy.git#egg=braingeneerspy[all]
+
+ENV ENDPOINT=https://s3-west.nrp-nautilus.io
