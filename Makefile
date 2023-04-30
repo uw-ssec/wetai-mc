@@ -36,3 +36,15 @@ push-s3-glacier-backup-service:
 
 shell-s3-glacier-backup-service:
 	docker run --rm -it braingeneers/service-s3-glacier-backup:latest bash
+
+#
+# job_h5repack
+#
+build-h5repack:
+	docker build -f job_h5repack/Dockerfile -t braingeneers/job_h5repack:latest .
+
+push-h5repack:
+	docker push braingeneers/job_h5repack:latest
+
+shell-h5repack:
+	docker run --rm -it braingeneers/job_h5repack:latest bash

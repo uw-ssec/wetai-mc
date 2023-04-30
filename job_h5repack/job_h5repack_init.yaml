@@ -27,48 +27,28 @@ spec:
             memory: "1000Mi"
 
         env:
+          - name: "UUID"
+            value: "2023-04-17-e-causal_v1"
           - name: "AWS_PROFILE"
             value: "default"
           - name: "TF_CPP_MIN_LOG_LEVEL"
             value: "3"
-          - name: "VERSION"
-            value: "${VERSION}"
-          - name: "SAMPLE_WIDTH"
-            value: "${SAMPLE_WIDTH}"
-          - name: "INCLUDE_CHANNELS"
-            value: "${INCLUDE_CHANNELS}"
-          - name: "DATASET_NAME"
-            value: "${DATASET_NAME}"
-          - name: "DATASET_NAME_LOWERCASE"
-            value: "${DATASET_NAME_LOWERCASE}"
-          - name: "USER"
-            value: "${USER}"
-          - name: "CONTAINER"
-            value: "${CONTAINER}"
           - name: "PYTHONUNBUFFERED"
             value: "true"
-
-          # Endpoint
-          - name: "ENDPOINT"
-            value: "${JOB_ENDPOINT}"
-          - name: "S3_ENDPOINT"
-            value: "${JOB_S3_ENDPOINT}"
-          - name: "S3_USE_HTTPS"
-            value: "${JOB_S3_USE_HTTPS}"
 
         volumeMounts:
 
           # Ceph & SWFS credentials
           - name: "prp-s3-credentials"
-            mountPath: "/root/.aws/credentials"
+            mountPath: "/home/jovyan/.aws/credentials"
             subPath: "credentials"
           - name: "prp-s3-credentials"
-            mountPath: "/root/.s3cfg"
+            mountPath: "/home/jovyan/.s3cfg"
             subPath: ".s3cfg"
 
           # kube config
           - name: "kube-config"
-            mountPath: "/root/.kube"
+            mountPath: "/home/jovyan/.kube"
           # SystemV shared memory
           - name: "dshm"
             mountPath: "/dev/shm"
