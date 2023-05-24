@@ -3,7 +3,7 @@ name: Test
 on: [push, pull_request]
 
 env:
-  PROJECT_NAME: ssec_project
+  PROJECT_NAME: wetai
 
 jobs:
   unit_test:
