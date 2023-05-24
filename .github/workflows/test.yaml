@@ -1,11 +1,20 @@
 name: Test
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 env:
   PROJECT_NAME: wetai
 
 jobs:
+  unit_test:
+    runs-on: ubuntu-latest
   unit_test:
     name: ${{ matrix.python-version }}-unit-test
     runs-on: ubuntu-22.04
