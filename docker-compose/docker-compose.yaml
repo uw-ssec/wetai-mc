@@ -1,10 +1,12 @@
 version: '3'
 services:
+  # Spike Sorting Listener Service (Sury)
   spike_sorting_listener:
     image: surygeng/spike_sorting_listener:latest
     networks:
       - braingeneers-net
 
+  # Plotly Picroscope Console Service (Pierre)
   plotly_picroscope_console:
     image: plotlydashpicroscopeconsole_picroscope-console
     ports:
@@ -12,6 +14,7 @@ services:
     networks:
       - braingeneers-net
 
+  # Strapi Service (Pierre)
   strapi_service:
     image: mystrapi:latest
     ports:
@@ -19,6 +22,7 @@ services:
     networks:
       - braingeneers-net
 
+  # Shadows Viewer Service (Pierre)
   shadows_viewer:
     image: shadows_viewer:latest
     ports:
@@ -26,6 +30,7 @@ services:
     networks:
       - braingeneers-net
 
+  # MQTT Message Broker Service (Pierre / David)
   emqx_message_broker:
     image: emqx/emqx:5.0.4
     ports:
@@ -36,11 +41,7 @@ services:
     networks:
       - braingeneers-net
 
-  bash_container:
-    image: b3ab294c3251
-    networks:
-      - braingeneers-net
-
+  # Image Viewer Service (Pierre / Victoria)
   image_viewer:
     image: braingeneers/images:latest
     ports:
@@ -48,6 +49,7 @@ services:
     networks:
       - braingeneers-net
 
+  # Maxwell Dashboard Service (Sury)
   maxwell_dashboard:
     image: surygeng/maxwell_dashboard:latest
     ports:
@@ -55,6 +57,7 @@ services:
     networks:
       - braingeneers-net
 
+  # Redis Service (David)
   redis_service:
     image: braingeneers/redis:latest
     ports:
@@ -62,6 +65,7 @@ services:
     networks:
       - braingeneers-net
 
+  # Braingeneers Dashboard Service (David)
   braingeneers_dashboard:
     image: braingeneers/dashboard:v1.5
     ports:
@@ -69,6 +73,7 @@ services:
     networks:
       - braingeneers-net
 
+  # Picroscope Videostream Service (Pierre)
   picroscope_videostream:
     image: picroscopelivestreamserver_picroscope-videostream
     ports:
@@ -77,6 +82,7 @@ services:
     networks:
       - braingeneers-net
 
+# Network Configuration Common to All Services
 networks:
   braingeneers-net:
     driver: bridge
