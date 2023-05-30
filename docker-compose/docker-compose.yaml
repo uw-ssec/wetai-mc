@@ -1,0 +1,82 @@
+version: '3'
+services:
+  spike_sorting_listener:
+    image: surygeng/spike_sorting_listener:latest
+    networks:
+      - braingeneers-net
+
+  plotly_picroscope_console:
+    image: plotlydashpicroscopeconsole_picroscope-console
+    ports:
+      - 8051:8050
+    networks:
+      - braingeneers-net
+
+  strapi_service:
+    image: mystrapi:latest
+    ports:
+      - 1337:1337
+    networks:
+      - braingeneers-net
+
+  shadows_viewer:
+    image: shadows_viewer:latest
+    ports:
+      - 8057:80
+    networks:
+      - braingeneers-net
+
+  emqx_message_broker:
+    image: emqx/emqx:5.0.4
+    ports:
+      - 1883:1883
+      - 8083-8084:8083-8084
+      - 8883:8883
+      - 18083:18083
+    networks:
+      - braingeneers-net
+
+  bash_container:
+    image: b3ab294c3251
+    networks:
+      - braingeneers-net
+
+  image_viewer:
+    image: braingeneers/images:latest
+    ports:
+      - 8058:80
+    networks:
+      - braingeneers-net
+
+  maxwell_dashboard:
+    image: surygeng/maxwell_dashboard:latest
+    ports:
+      - 8060:8050
+    networks:
+      - braingeneers-net
+
+  redis_service:
+    image: braingeneers/redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - braingeneers-net
+
+  braingeneers_dashboard:
+    image: braingeneers/dashboard:v1.5
+    ports:
+      - 8050:8050
+    networks:
+      - braingeneers-net
+
+  picroscope_videostream:
+    image: picroscopelivestreamserver_picroscope-videostream
+    ports:
+      - 700:700
+      - 8888:8888
+    networks:
+      - braingeneers-net
+
+networks:
+  braingeneers-net:
+    driver: bridge
