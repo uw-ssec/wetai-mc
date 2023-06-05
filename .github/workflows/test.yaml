@@ -1,13 +1,6 @@
 name: Test
 
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+on: [push,pull_request]
 
 env:
   PROJECT_NAME: wetai
