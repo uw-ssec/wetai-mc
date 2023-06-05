@@ -23,7 +23,11 @@ TASK_BACKUP_PREFIX = 'BACKUP_PREFIX',
 TASK_END = 'END'
 TASK_WRITE_STATE = 'TASK_WRITE_STATE'
 
-AWS_ENDPOINT = 's3.us-west-1.amazonaws.com'
+# BACKUP_BUCKET = 'braingeneers-backups'
+# AWS_ENDPOINT = 's3.us-west-1.amazonaws.com'
+
+BACKUP_BUCKET = 'braingeneersdev'
+AWS_ENDPOINT = 'https://s3-west.nrp-nautilus.io'
 
 
 def arg_parser():
@@ -154,7 +158,7 @@ def backup_prefix(prefix: str, last_modified_hash: str) -> str:
     if new_last_modified_hash != last_modified_hash:
         path_prefix = urllib.parse(prefix).path
         braingeneers.set_default_endpoint(AWS_ENDPOINT)
-        with smart_open.open(f's3://braingeneers-backups/{path_prefix}.zip', 'wb') as f_out:
+        with smart_open.open(f's3://{BACKUP_BUCKET}/{path_prefix}.zip', 'wb') as f_out:
             zipped_chunks = stream_zip(path_prefix, member_files_iterator(filtered_list))
             for zipped_chunk in zipped_chunks:
                 f_out.write(zipped_chunk)
