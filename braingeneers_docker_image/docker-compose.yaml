@@ -2,3 +2,14 @@
 # braingeneers stack. Use the Makefile to run it. Example:
 #   make start-services
 #   make stop-services
+version: '1.0.0'
+
+services:
+  braingeneers-mission-control:
+    build:
+      context: .
+      dockerfile: braingeneers_docker_image/Dockerfile
+    ports:
+      - 8888:8888
+    environment:
+      - ENDPOINT=https://s3-west.nrp-nautilus.io
