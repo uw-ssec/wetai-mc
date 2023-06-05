@@ -24,11 +24,58 @@
 
 <!-- GETTING STARTED -->
 ## Getting Started
+These instructions will guide you on how to get started with the Braingeneers Mission Control repository. By following these steps, you'll be able to set up the necessary dependencies and run the code locally.
 
 ### Prerequisites
+To use the Braingeneers Mission Control repository, you'll need the following prerequisites:
+
+1. Docker: Make sure you have Docker installed on your machine. You can download Docker from the official website: https://www.docker.com/get-started
+2. Git: You'll need Git installed to clone the repository. You can download Git from the official website: https://git-scm.com/downloads
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+Follow these steps to set up and use the Braingeneers Mission Control repository:
+
+1. Clone the repository:
+```
+git clone https://github.com/braingeneers/mission-control.git
+```
+
+2. Change into the cloned directory:
+```
+cd mission-control
+```
+
+3. Build the Docker image:
+```
+docker build -t braingeneers-mission-control .
+```
+
+4. Run the Docker container:
+```
+docker run -it braingeneers-mission-control
+```
+
+This command will start the Docker container and launch the Braingeneers Mission Control application.
+5. Access the Mission Control application:
+Once the container is running, you can access the Mission Control application by opening a web browser and navigating to http://localhost:8888.
+You will be prompted to enter a token for authentication. Look for the token in the terminal output where you started the Docker container. It will be displayed in a log line similar to:
+```
+To access the notebook, open this file in a browser:
+    file:///home/jovyan/.local/share/jupyter/runtime/nbserver-6-open.html
+Or copy and paste one of these URLs:
+    http://(container-id or 127.0.0.1):8888/?token=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+6. Copy the complete URL with the token and paste it into your browser. This will open the Braingeneers Mission Control notebook interface.
+Explore the Mission Control notebook:
+Once you're in the notebook interface, you can explore the available notebooks and interact with the Braingeneers Mission Control functionality. Follow the instructions provided within the notebooks to perform various tasks and analyses.
+
+That's it! You're now ready to use the Braingeneers Mission Control repository and explore the capabilities it offers. Feel free to modify the code, experiment with different parameters, and contribute to the project as you see fit.
+
+Please note that the above instructions assume a basic understanding of Docker and Git. If you're unfamiliar with these tools, you may want to refer to their respective documentation to learn more about their usage and concepts.
+
+I hope this helps! Let me know if you have any further questions.
 
 <!-- ROADMAP -->
 ## Roadmap
