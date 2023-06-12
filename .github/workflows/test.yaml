@@ -3,7 +3,7 @@ name: Test
 on: [push,pull_request]
 
 env:
-  PROJECT_NAME: wetai
+  PROJECT_NAME: wetai-mc
 
 jobs:
 
@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker-compose build . --file Dockerfile --tag braingeneers_docker_image:$(date +%s)
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Docker
+      uses: docker/setup-docker@v1
+
+    - name: Build Docker image
+      run: docker build -t wetai-mc .
