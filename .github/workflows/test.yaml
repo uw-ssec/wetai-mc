@@ -19,4 +19,4 @@ jobs:
       uses: docker/setup-docker@v1
 
     - name: Build Docker image
-      run: docker build -t wetai-mc .
+      run: docker build -t braingeneers-mission-control .
