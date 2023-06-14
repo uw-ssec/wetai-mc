@@ -15,6 +15,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+This repository contains the source code and related resources for the Braingeneers Mission Control project. Braingeneers Mission Control is a baseline for developing Docker containers including the `braingeneerspy` package on the National Research Platform (NRP).
 
 ### Built With
 
